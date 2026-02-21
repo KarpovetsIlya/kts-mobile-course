@@ -27,11 +27,9 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.coil3.compose)
-            implementation(libs.coil3.network.okhttp)
+            implementation(libs.ktor.client.okhttp)
         }
         iosMain.dependencies {
-            implementation(libs.coil3.network.ktor3)
             implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
@@ -45,6 +43,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.napier)
             implementation(libs.coil3.compose)
+            implementation(libs.coil3.network.ktor3)
+            implementation(compose.materialIconsExtended)
+            implementation(libs.jb.navigation.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

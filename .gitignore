@@ -23,3 +23,8 @@ local.properties
 **/DerivedData/
 *.xcuserstate
 **/xcuserdata/
+
+androidapp/release/
+keystore/
+*.jks
+*.keystore
