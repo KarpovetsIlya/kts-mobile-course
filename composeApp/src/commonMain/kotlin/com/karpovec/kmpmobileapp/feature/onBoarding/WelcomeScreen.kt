@@ -52,7 +52,7 @@ fun WelcomeScreen(
                 AsyncImage(
                     model = ImageRequest.Builder(context)
 
-                        .data("https://picsum.photos/600/400")
+                        .data("https://avt-school.ru/wp-content/uploads/2023/05/%D0%B4%D1%83%D0%B1%D0%BB%D1%8F%D0%B6-1024x910.png")
                             .memoryCachePolicy(CachePolicy.DISABLED)
                             .diskCachePolicy(CachePolicy.DISABLED)
                             .crossfade(true)
