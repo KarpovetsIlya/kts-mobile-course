@@ -41,7 +41,7 @@ fun AppNavHost(
                         saveState = true
                     )
                 },
-                onToggleTheme = onToggleTheme
+                onToggleTheme = onToggleTheme,
             )
         }
     }
