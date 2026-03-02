@@ -1,48 +1,60 @@
 package com.karpovec.kmpmobileapp.app
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.karpovec.kmpmobileapp.feature.login.LoginScreen
-import com.karpovec.kmpmobileapp.feature.onBoarding.WelcomeScreen
+import com.karpovec.kmpmobileapp.feature.login.presentation.LoginScreen
+import com.karpovec.kmpmobileapp.feature.main.presentation.MainScreen
+import com.karpovec.kmpmobileapp.feature.onBoarding.presentation.OnBoardingScreen
 
 sealed class Screen(val route: String) {
-    object Welcome : Screen("welcome")
+    object OnBoarding : Screen("onBoarding")
     object Login : Screen("login")
+    object Main : Screen("main")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavHost(
-    onToggleTheme: () -> Unit
+    onToggleTheme: () -> Unit,
 ) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Screen.Welcome.route) {
-        composable(Screen.Welcome.route) {
-            WelcomeScreen(
-                onClick = {
+    NavHost(navController = navController, startDestination = Screen.OnBoarding.route) {
+
+        composable(Screen.OnBoarding.route) {
+            OnBoardingScreen (
+                onFinish = {
                     navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.OnBoarding.route) { inclusive = true }
                         launchSingleTop = true
-                        restoreState = true
                     }
-                },
-                onToggleTheme = onToggleTheme
+                }
             )
         }
+
         composable(Screen.Login.route) {
             LoginScreen(
-                onClick = {
+                onBackClick = {
                     navController.popBackStack(
-                        route = Screen.Welcome.route,
+                        route = Screen.OnBoarding.route,
                         inclusive = false,
-                        saveState = true
+                        saveState = false
                     )
                 },
                 onToggleTheme = onToggleTheme,
+                onLoginSuccess = {
+                    navController.navigate(Screen.Main.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                        restoreState = false
+                    }
+                }
             )
+        }
+
+        composable(Screen.Main.route) {
+            MainScreen()
         }
     }
 }
