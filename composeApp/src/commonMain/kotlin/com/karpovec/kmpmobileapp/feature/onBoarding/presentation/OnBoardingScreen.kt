@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WelcomeScreen(
+fun OnBoardingScreen(
     onFinish: () -> Unit
 ) {
     val cs = MaterialTheme.colorScheme
