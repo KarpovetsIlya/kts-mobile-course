@@ -1,4 +1,4 @@
-package com.karpovec.kmpmobileapp.feature.login
+package com.karpovec.kmpmobileapp.feature.login.presentation
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Box
@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Visibility
@@ -30,6 +29,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,31 +46,39 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.Unit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onClick: () -> Unit,
-    onToggleTheme: () -> Unit
+    onBackClick: () -> Unit,
+    onToggleTheme: () -> Unit,
+    onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel = viewModel()
 ) {
+    val uiState by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collectLatest { event ->
+            when (event) {
+                LoginUiEvent.LoginSuccessEvent -> onLoginSuccess()
+            }
+        }
+    }
+
     val animatedBgColor by animateColorAsState(
         targetValue = MaterialTheme.colorScheme.background,
         label = "colorAnimation"
     )
+
     Scaffold(
         containerColor = animatedBgColor,
         topBar = {
             Surface(color = animatedBgColor) {
                 CenterAlignedTopAppBar(
-                    title = {
-                        Text("Login", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onClick) {
-                            Icon(Icons.Default.ArrowBack, "Back")
-                        }
-                    },
+                    title = { Text("Login", fontSize = 30.sp, fontWeight = FontWeight.Bold) },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                         containerColor = Color.Transparent,
                         scrolledContainerColor = Color.Transparent,
@@ -98,6 +107,7 @@ fun LoginScreen(
         ) {
             Spacer(Modifier.weight(1f))
             val fieldWidth = Modifier.fillMaxWidth(0.8f)
+
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -110,10 +120,10 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(Modifier.height(10.dp))
-                var email by rememberSaveable { mutableStateOf("") }
+
                 OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = uiState.username,
+                    onValueChange = viewModel::onUsernameChanged,
                     modifier = fieldWidth,
                     placeholder = { Text("Email") },
                     singleLine = true,
@@ -130,6 +140,7 @@ fun LoginScreen(
                     ),
                     shape = RoundedCornerShape(20.dp)
                 )
+
                 Spacer(Modifier.height(20.dp))
                 Text(
                     "Enter your password",
@@ -139,11 +150,12 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(Modifier.height(10.dp))
-                var password by rememberSaveable { mutableStateOf("") }
+
                 var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
+
                 OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = uiState.password,
+                    onValueChange = viewModel::onPasswordChanged,
                     modifier = fieldWidth,
                     placeholder = { Text("Password") },
                     singleLine = true,
@@ -171,14 +183,25 @@ fun LoginScreen(
                     ),
                     shape = RoundedCornerShape(20.dp)
                 )
+
+                if (uiState.error != null) {
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        text = uiState.error!!,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = fieldWidth
+                    )
+                }
             }
+
             Box(
                 modifier = Modifier
                     .weight(1.5f)
                     .fillMaxWidth()
             ) {
                 Button(
-                    onClick = {  },
+                    onClick = viewModel::onLoginClick,
+                    enabled = uiState.isLoginButtonActive,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .fillMaxWidth(0.8f)
