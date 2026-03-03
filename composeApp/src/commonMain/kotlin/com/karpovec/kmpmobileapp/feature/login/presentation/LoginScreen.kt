@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
@@ -76,42 +80,38 @@ fun LoginScreen(
     Scaffold(
         containerColor = animatedBgColor,
         topBar = {
-            Surface(color = animatedBgColor) {
-                CenterAlignedTopAppBar(
-                    title = { Text("Login", fontSize = 30.sp, fontWeight = FontWeight.Bold) },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color.Transparent,
-                        scrolledContainerColor = Color.Transparent,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        actionIconContentColor = MaterialTheme.colorScheme.onSurface,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                    ),
-                    actions = {
-                        val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
-                        IconButton(onClick = onToggleTheme) {
-                            Icon(
-                                imageVector = if (isDark) Icons.Default.LightMode else Icons.Default.DarkMode,
-                                contentDescription = "Toggle theme"
-                            )
-                        }
-                    }
-                )
-            }
+            CenterAlignedTopAppBar(
+                title = { Text("Login", fontSize = 30.sp, fontWeight = FontWeight.Bold) },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                ),
+            )
         }
     ) { innerPadding ->
-        Column(
+
+        val scrollState = rememberScrollState()
+        val fieldWidth = Modifier.fillMaxWidth(0.8f)
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .imePadding()
+                .navigationBarsPadding()
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(Modifier.weight(1f))
-            val fieldWidth = Modifier.fillMaxWidth(0.8f)
-
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
                 Text(
                     "Enter your email",
                     fontSize = 16.sp,
@@ -128,20 +128,19 @@ fun LoginScreen(
                     placeholder = { Text("Email") },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    shape = RoundedCornerShape(20.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                         focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    ),
-                    shape = RoundedCornerShape(20.dp)
+                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+                    )
                 )
 
                 Spacer(Modifier.height(20.dp))
+
                 Text(
                     "Enter your password",
                     fontSize = 16.sp,
@@ -165,23 +164,17 @@ fun LoginScreen(
                         IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                             Icon(
                                 imageVector = if (isPasswordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
-                                contentDescription = if (isPasswordVisible) "Hide password" else "Show password"
+                                contentDescription = null
                             )
                         }
                     },
+                    shape = RoundedCornerShape(20.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        focusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurface
-                    ),
-                    shape = RoundedCornerShape(20.dp)
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                    )
                 )
 
                 if (uiState.error != null) {
@@ -192,20 +185,13 @@ fun LoginScreen(
                         modifier = fieldWidth
                     )
                 }
-            }
 
-            Box(
-                modifier = Modifier
-                    .weight(1.5f)
-                    .fillMaxWidth()
-            ) {
+                Spacer(Modifier.height(28.dp))
+
                 Button(
                     onClick = viewModel::onLoginClick,
                     enabled = uiState.isLoginButtonActive,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .fillMaxWidth(0.8f)
-                        .height(60.dp),
+                    modifier = fieldWidth.height(60.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
@@ -214,6 +200,8 @@ fun LoginScreen(
                 ) {
                     Text("Login", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 }
+
+                Spacer(Modifier.height(24.dp))
             }
         }
     }

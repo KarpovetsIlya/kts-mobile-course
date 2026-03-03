@@ -16,6 +16,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
@@ -33,13 +34,14 @@ fun OnBoardingScreen(
     val pagerState = rememberPagerState(pageCount = { pages.size })
     val isLastPage = pagerState.currentPage == pages.lastIndex
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = cs.background
-    ) {
+    Scaffold(
+        containerColor = cs.background
+    ) { innerPadding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .padding(horizontal = 20.dp)
         ) {
 
@@ -47,6 +49,7 @@ fun OnBoardingScreen(
 
             HorizontalPager(
                 state = pagerState,
+                userScrollEnabled = false,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
