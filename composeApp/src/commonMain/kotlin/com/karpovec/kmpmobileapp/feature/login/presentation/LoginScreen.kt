@@ -15,8 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -29,7 +27,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -42,16 +39,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.karpovec.kmpmobileapp.Res
+import com.karpovec.kmpmobileapp.core.theme.LocalDimens
+import com.karpovec.kmpmobileapp.email_placeholder
+import com.karpovec.kmpmobileapp.enter_email
+import com.karpovec.kmpmobileapp.enter_password
+import com.karpovec.kmpmobileapp.login_button
+import com.karpovec.kmpmobileapp.login_title
+import com.karpovec.kmpmobileapp.password_placeholder
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.stringResource
 import kotlin.Unit
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,6 +65,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = viewModel()
 ) {
     val uiState by viewModel.state.collectAsState()
+    val d = LocalDimens.current
 
     LaunchedEffect(Unit) {
         viewModel.events.collectLatest { event ->
@@ -81,7 +84,12 @@ fun LoginScreen(
         containerColor = animatedBgColor,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Login", fontSize = 30.sp, fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        text = stringResource(Res.string.login_title),
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color.Transparent,
                     scrolledContainerColor = Color.Transparent,
@@ -94,7 +102,7 @@ fun LoginScreen(
     ) { innerPadding ->
 
         val scrollState = rememberScrollState()
-        val fieldWidth = Modifier.fillMaxWidth(0.8f)
+        val fieldWidth = Modifier.fillMaxWidth(d.contentWidth)
 
         Box(
             modifier = Modifier
@@ -102,7 +110,7 @@ fun LoginScreen(
                 .padding(innerPadding)
                 .imePadding()
                 .navigationBarsPadding()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = d.screenPadding)
         ) {
             Column(
                 modifier = Modifier
@@ -113,22 +121,22 @@ fun LoginScreen(
             ) {
 
                 Text(
-                    "Enter your email",
-                    fontSize = 16.sp,
+                    text = stringResource(Res.string.enter_email),
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = fieldWidth,
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(d.spaceS))
 
                 OutlinedTextField(
                     value = uiState.username,
                     onValueChange = viewModel::onUsernameChanged,
                     modifier = fieldWidth,
-                    placeholder = { Text("Email") },
+                    placeholder = { Text(stringResource(Res.string.email_placeholder)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(d.textFieldCorner),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -139,16 +147,16 @@ fun LoginScreen(
                     )
                 )
 
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(d.spaceL))
 
                 Text(
-                    "Enter your password",
-                    fontSize = 16.sp,
+                    text = stringResource(Res.string.enter_password),
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = fieldWidth,
                     textAlign = TextAlign.Start,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(d.spaceS))
 
                 var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -156,7 +164,7 @@ fun LoginScreen(
                     value = uiState.password,
                     onValueChange = viewModel::onPasswordChanged,
                     modifier = fieldWidth,
-                    placeholder = { Text("Password") },
+                    placeholder = { Text(stringResource(Res.string.password_placeholder)) },
                     singleLine = true,
                     visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -168,7 +176,7 @@ fun LoginScreen(
                             )
                         }
                     },
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(d.textFieldCorner),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.surface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -178,30 +186,34 @@ fun LoginScreen(
                 )
 
                 if (uiState.error != null) {
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(d.spaceS))
                     Text(
                         text = uiState.error!!,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
                         modifier = fieldWidth
                     )
                 }
 
-                Spacer(Modifier.height(28.dp))
+                Spacer(Modifier.height(d.spaceXl))
 
                 Button(
                     onClick = viewModel::onLoginClick,
                     enabled = uiState.isLoginButtonActive,
-                    modifier = fieldWidth.height(60.dp),
+                    modifier = fieldWidth.height(d.buttonHeight),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
-                    shape = RoundedCornerShape(20.dp)
+                    shape = RoundedCornerShape(d.buttonCorner)
                 ) {
-                    Text("Login", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = stringResource(Res.string.login_button),
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(d.spaceL))
             }
         }
     }

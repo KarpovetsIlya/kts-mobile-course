@@ -27,6 +27,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+
             implementation(libs.ktor.client.okhttp)
         }
         iosMain.dependencies {
@@ -46,9 +47,15 @@ kotlin {
             implementation(libs.coil3.network.ktor3)
             implementation(compose.materialIconsExtended)
             implementation(libs.jb.navigation.compose)
+            implementation(libs.multiplatform.settings)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.karpovec.kmpmobileapp"
 }

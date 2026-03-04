@@ -1,19 +1,31 @@
 package com.karpovec.kmpmobileapp.feature.onBoarding.presentation.model
 
+import com.karpovec.kmpmobileapp.Res
+import com.karpovec.kmpmobileapp.offline_favorites
+import com.karpovec.kmpmobileapp.onboarding_desc_1
+import com.karpovec.kmpmobileapp.onboarding_desc_2
+import com.karpovec.kmpmobileapp.onboarding_desc_3
+import com.karpovec.kmpmobileapp.onboarding_title_1
+import com.karpovec.kmpmobileapp.onboarding_title_2
+import com.karpovec.kmpmobileapp.onboarding_title_3
+import com.karpovec.kmpmobileapp.profile
+
+import com.karpovec.kmpmobileapp.search_repositories
+
 fun onboardingPages(): List<OnboardingPage> = listOf(
     OnboardingPage(
-        title = "GitHub Explorer",
-        description = "Ищи репозитории, смотри описание, язык и звезды — быстро и удобно.",
-        emoji = "🔎"
+        title = Res.string.onboarding_title_1,
+        description = Res.string.onboarding_desc_1,
+        image = Res.drawable.search_repositories
     ),
     OnboardingPage(
-        title = "Избранное офлайн",
-        description = "Сохраняй понравившиеся репозитории и открывай их без интернета.",
-        emoji = "⭐"
+        title = Res.string.onboarding_title_2,
+        description = Res.string.onboarding_desc_2,
+        image = Res.drawable.offline_favorites
     ),
     OnboardingPage(
-        title = "Профиль и Issues",
-        description = "Просматривай профиль и создавай issues прямо из приложения.",
-        emoji = "📝"
+        title = Res.string.onboarding_title_3,
+        description = Res.string.onboarding_desc_3,
+        image = Res.drawable.profile
     )
 )

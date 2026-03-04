@@ -19,6 +19,7 @@ napier = "2.7.1"
 coil3 = "3.3.0"
 ktor = "3.4.0"
 jbNavigation = "2.9.2"
+settings = "1.3.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -54,6 +55,7 @@ coil3-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 jb-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jbNavigation" }
+multiplatform-settings = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "settings" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
