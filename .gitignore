@@ -12,6 +12,7 @@ out/
 .cxx/
 
 .konan/
+.kotlin/
 
 local.properties
 **/*.apk
@@ -21,5 +22,9 @@ local.properties
 
 **/DerivedData/
 *.xcuserstate
-**/*.xcworkspace/xcuserdata/
-**/*.xcodeproj/xcuserdata/
+**/xcuserdata/
+
+androidapp/release/
+keystore/
+*.jks
+*.keystore

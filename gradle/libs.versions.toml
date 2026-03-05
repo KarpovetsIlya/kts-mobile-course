@@ -15,6 +15,10 @@ kotlin = "2.3.0"
 material3 = "1.10.0-alpha05"
 lifecycleRuntimeKtx = "2.6.1"
 composeBom = "2024.09.00"
+napier = "2.7.1"
+coil3 = "3.3.0"
+ktor = "3.4.0"
+jbNavigation = "2.9.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,6 +47,13 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
+coil3-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil3" }
+coil3-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil3" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+jb-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jbNavigation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
