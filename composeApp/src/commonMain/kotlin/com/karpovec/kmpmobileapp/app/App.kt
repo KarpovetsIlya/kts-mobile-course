@@ -8,14 +8,14 @@ import com.karpovec.kmpmobileapp.core.theme.LightColors
 
 
 @Composable
-fun App() {
+fun App(onExitApp: () -> Unit) {
     var darkTheme by rememberSaveable { mutableStateOf(false) }
 
     MaterialTheme(
         colorScheme = if (darkTheme) DarkColors else LightColors
     ) {
         AppNavHost(
-            onToggleTheme = { darkTheme = !darkTheme }
+            onToggleTheme = { darkTheme = !darkTheme },
         )
     }
 }
