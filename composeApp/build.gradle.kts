@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.androidKmpLibrary)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -46,9 +47,19 @@ kotlin {
             implementation(libs.coil3.network.ktor3)
             implementation(compose.materialIconsExtended)
             implementation(libs.jb.navigation.compose)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.karpovec.kmpmobileapp"
 }

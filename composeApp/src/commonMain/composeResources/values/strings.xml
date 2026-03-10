@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_title">Login</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="email_placeholder">Email</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="password_placeholder">Password</string>
+    <string name="login_button">Sign in to GitHub.com</string>
+    <string name="onboarding_title_1">GitHub Explorer</string>
+    <string name="onboarding_desc_1">
+    Ищи репозитории, смотри описание, язык и звезды — быстро и удобно.
+    </string>
+    <string name="onboarding_title_2">Избранное офлайн</string>
+    <string name="onboarding_desc_2">
+    Сохраняй понравившиеся репозитории и открывай их без интернета.
+    </string>
+    <string name="onboarding_title_3">Профиль и Issues</string>
+    <string name="onboarding_desc_3">
+    Просматривай профиль и создавай issues прямо из приложения.
+    </string>
+</resources>
