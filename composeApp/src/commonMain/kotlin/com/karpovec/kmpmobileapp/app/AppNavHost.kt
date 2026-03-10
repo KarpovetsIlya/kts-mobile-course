@@ -1,6 +1,7 @@
 package com.karpovec.kmpmobileapp.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.karpovec.kmpmobileapp.core.settings.AppPrefs
 import com.karpovec.kmpmobileapp.feature.login.presentation.LoginScreen
 import com.karpovec.kmpmobileapp.feature.main.presentation.MainScreen
+import com.karpovec.kmpmobileapp.feature.main.presentation.MainViewModel
 import com.karpovec.kmpmobileapp.feature.onBoarding.presentation.OnBoardingScreen
 import com.russhwolf.settings.Settings
 
@@ -20,12 +22,32 @@ sealed class Screen(val route: String) {
 @Composable
 fun AppNavHost(
     onToggleTheme: () -> Unit,
+    onStartOAuth: () -> Unit,
+    isAuthorized: Boolean,
+    mainViewModel: MainViewModel
 ) {
     val navController = rememberNavController()
     val prefs = remember { AppPrefs(Settings()) }
     val startRoute =
         if (prefs.isFirstLaunch()) Screen.OnBoarding.route
         else Screen.Login.route
+
+    LaunchedEffect(isAuthorized) {
+        if (!prefs.isFirstLaunch()) {
+            if (isAuthorized) {
+                navController.navigate(Screen.Main.route) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            } else {
+                navController.navigate(Screen.Login.route) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = startRoute
@@ -45,20 +67,20 @@ fun AppNavHost(
         }
         composable(Screen.Login.route) {
             LoginScreen(
-                onBackClick = {
-                    navController.popBackStack()
-                },
-                onToggleTheme = onToggleTheme,
+                onBackClick = { navController.popBackStack() },
                 onLoginSuccess = {
                     navController.navigate(Screen.Main.route) {
                         popUpTo(0)
                         launchSingleTop = true
                     }
-                }
+                },
+                onLoginClick = onStartOAuth
             )
         }
         composable(Screen.Main.route) {
-            MainScreen()
+            MainScreen(
+                viewModel = mainViewModel
+            )
         }
     }
 }
